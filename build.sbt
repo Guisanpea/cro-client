@@ -9,15 +9,13 @@ lazy val root = (project in file("."))
   .settings(
     name := "Cro client",
     libraryDependencies ++= Seq(
+      cats,
       circe,
       circeGenericExtras,
+      commonsCodec,
       scalaTest % Test,
-      sttp,
-      sttpZio,
-      sttpCirce,
+      squants,
       zio,
       zioLogging
-    )
+    ) ++ macwireAll ++ sttpAll
   )
-
-// See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.

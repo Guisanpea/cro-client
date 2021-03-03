@@ -1,4 +1,4 @@
-package com.crypto
+package com.crypto.request
 
 import io.circe.generic.extras.semiauto._
 import io.circe.{Decoder, Encoder}
@@ -9,10 +9,7 @@ import zio.random.Random
 case class CroPublicRequest(id: Long, method: String, nonce: Long)
 
 object CroPublicRequest {
-  implicit val publicEncoder: Encoder[CroPublicRequest] = deriveConfiguredEncoder
-  implicit def publicDecoder: Decoder[CroPublicRequest] = deriveConfiguredDecoder
-
-  def getInstrumentsRequest =
+  val getInstrumentsRequest: ZIO[Clock with Random, Nothing, CroPublicRequest] =
     for {
       id    <- ZIO.accessM[Random](_.get.nextInt.map(_.abs))
       nonce <- ZIO.accessM[Clock](_.get.instant).map(_.toEpochMilli)
