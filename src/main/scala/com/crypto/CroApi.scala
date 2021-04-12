@@ -9,15 +9,14 @@ import com.crypto.response.{
   GetInstrumentsResult,
   GetOrderDetailResult
 }
+import faith.knowledge.common.CurrencyPair
 import io.circe
 import io.circe.Decoder
 import squants.market.Currency
-import sttp.client3.Response.ExampleGet.uri
 import sttp.client3._
 import sttp.client3.asynchttpclient.zio._
 import sttp.client3.circe._
 import sttp.model.Uri
-import zio.{ZIO, clock}
 import zio.logging.log
 import zio._
 import zio.duration._
@@ -31,14 +30,17 @@ class CroApi(sigProvider: SigProvider) {
       request <- CroPublicRequest.getInstrumentsRequest
       sttpRequest =
         createGetRequest[CroPublicRequest, GetInstrumentsResult](method = "public/get-instruments", body = request)
-      _        <- log.info(s"Sending getInstruments request: $sttpRequest")
-      response <- send(sttpRequest)
-      _        <- logResponse(response)
+      _            <- log.info(s"Sending getInstruments request: $sttpRequest")
+      sttpResponse <- send(sttpRequest)
+      _            <- logResponse(sttpResponse)
+      response     <- ZIO.fromEither(sttpResponse.body)
     } yield response
 
-  def requestBuyOrder(from: Currency, to: Currency, amount: BigDecimal) =
+  // When you buy a currency pair from a broker, you buy the base currency and sell the quote currency.
+  // for example if you buy BTC_USD you but BTC by selling USD
+  def requestBuyOrder(pair: CurrencyPair, amount: BigDecimal) =
     for {
-      request <- CroPrivateRequest.createBuyRequest(from, to, amount).map(sigProvider.signRequest)
+      request <- CroPrivateRequest.createBuyRequest(pair, amount).map(sigProvider.signRequest)
       sttpRequest =
         createPostRequest[CroSignedRequest, CreateOrderResult](method = "private/create-order", body = request)
       _            <- log.info(s"Sending buy request: $sttpRequest")
@@ -69,6 +71,22 @@ class CroApi(sigProvider: SigProvider) {
       case Right(value) =>
         log.info(s"received response from CRO $value, response was $response")
     }
+
+  def getExchangeRate(pair: CurrencyPair) = {
+    def findOppositePairPrice(instruments: List[GetInstrumentsResult.Instruments]) = {
+      instruments
+        .find(_.representsPair(pair.oppositePair))
+        .map(_.priceDecimals)
+        .map(1 / _)
+    }
+
+    getInstruments.map(_.instruments) map { instruments =>
+      instruments
+        .find(_.representsPair(pair))
+        .map(_.priceDecimals)
+        .orElse(findOppositePairPrice(instruments))
+    } cached ()
+  }
 }
 
 object CroApi {

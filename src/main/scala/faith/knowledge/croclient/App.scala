@@ -1,8 +1,8 @@
 package faith.knowledge.croclient
 
 import com.crypto.{CroApi, SigProvider}
-import faith.knowledge.croclient.Money.USDT
-import Money.USDT
+import faith.knowledge.common.Money.USDT
+import faith.knowledge.common.Money.USDT
 import squants.market.{BTC, USD}
 import sttp.client3.asynchttpclient.zio.{AsyncHttpClientZioBackend, SttpClient}
 import zio.clock.Clock

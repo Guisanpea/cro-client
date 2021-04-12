@@ -1,4 +1,4 @@
-package faith.knowledge.croclient
+package faith.knowledge.common
 
 import squants.market.Currency
 

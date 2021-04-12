@@ -2,6 +2,7 @@ package com.crypto.request
 
 import cats.implicits._
 import com.crypto.Jsonable
+import faith.knowledge.common.CurrencyPair
 import squants.market.Currency
 import zio.{ZIO, clock, random}
 import zio.clock.Clock
@@ -15,7 +16,7 @@ case class CroPrivateRequest[Params <: Jsonable](id: Long, method: String, nonce
 }
 
 object CroPrivateRequest {
-  def createBuyRequest(from: Currency, to: Currency, amount: BigDecimal) =
+  def createBuyRequest(pair: CurrencyPair, amount: BigDecimal) =
     for {
       id    <- random.nextInt.map(_.abs)
       nonce <- clock.instant.map(_.toEpochMilli)
@@ -24,7 +25,7 @@ object CroPrivateRequest {
       method = "private/create-order",
       nonce = nonce,
       params = CreateOrderRequestParams(
-        instrumentName = s"${to.code}_${from.code}",
+        instrumentName = s"${pair.instrumentName}",
         `type` = "MARKET",
         side = "BUY",
         notional = amount.some
