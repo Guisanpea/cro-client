@@ -1,22 +1,18 @@
 package com.crypto.response
 
-import com.crypto.response.GetInstrumentsResult.Instruments
-import faith.knowledge.common.CurrencyPair
-import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
-import io.circe.{Decoder, Encoder}
+import com.crypto.response.GetInstrumentsResult.InstrumentResult
+import faith.knowledge.common.Instrument
+import squants.market.Currency
 
-case class GetInstrumentsResult(instruments: List[Instruments])
+case class GetInstrumentsResult(instruments: List[InstrumentResult])
 
 object GetInstrumentsResult {
-  case class Instruments(
-    instrumentName: String,
-    baseCurrency: String,
-    quoteCurrency: String,
-    priceDecimals: BigDecimal,
-    quantityDecimals: BigDecimal,
+  case class InstrumentResult(
+    instrumentName: Instrument,
+    baseCurrency: Currency,
+    quoteCurrency: Currency,
+    priceDecimals: Double,
+    quantityDecimals: Double,
     marginTradingEnabled: Boolean
-  ) {
-    def representsPair(pair: CurrencyPair) =
-      this.baseCurrency == pair.base.code && this.quoteCurrency == pair.quote.code
-  }
+  )
 }

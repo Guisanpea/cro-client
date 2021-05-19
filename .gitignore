@@ -64,4 +64,4 @@ project/plugins/project/
 *.class
 *.log
 
-# End of https://www.toptal.com/developers/gitignore/api/scala,sbt,intellij,macos,linux
+.env

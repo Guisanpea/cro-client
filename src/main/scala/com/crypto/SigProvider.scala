@@ -1,7 +1,7 @@
 package com.crypto
 
 import com.crypto.request.{CroPrivateRequest, CroSignedRequest}
-import faith.knowledge.common.ChainingSyntax._
+import faith.knowledge.common.syntax.ChainingSyntax._
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.{HmacAlgorithms, HmacUtils}
 

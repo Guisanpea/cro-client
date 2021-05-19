@@ -8,11 +8,11 @@ object GetOrderDetailResult {
   case class TradeList(
     side: String,
     instrumentName: String,
-    fee: BigDecimal,
+    fee: Double,
     tradeId: String,
     createTime: Long,
-    tradedPrice: BigDecimal,
-    tradedQuantity: BigDecimal,
+    tradedPrice: Double,
+    tradedQuantity: Double,
     feeCurrency: String,
     orderId: String
   )
@@ -21,8 +21,8 @@ object GetOrderDetailResult {
     status: String,
     reason: Option[Int],
     side: String,
-    price: Option[BigDecimal],
-    quantity: Option[BigDecimal],
+    price: Option[Double],
+    quantity: Option[Double],
     orderId: String,
     clientOid: Option[String],
     createTime: Long,
