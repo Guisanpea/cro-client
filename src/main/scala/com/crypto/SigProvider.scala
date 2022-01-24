@@ -6,7 +6,7 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.{HmacAlgorithms, HmacUtils}
 
 class SigProvider(apiKey: String, privateKey: String) {
-  def signRequest[Params <: Jsonable](request: CroPrivateRequest[Params]): CroSignedRequest = {
+  def signRequest[Params](request: CroPrivateRequest[Params]): CroSignedRequest = {
     val noHashSig = request.method + request.id.toString + apiKey + request.croParamsString + request.nonce.toString
 
     (new HmacUtils(HmacAlgorithms.HMAC_SHA_256, privateKey).hmac(noHashSig)

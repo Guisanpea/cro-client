@@ -1,28 +1,23 @@
 package com.crypto.request
 
+import cats.effect.std.Random
+import cats.effect.{Clock, IO}
 import cats.implicits._
-import com.crypto.Jsonable
+import com.crypto.request.Json._
 import faith.knowledge.common.Instrument
-import squants.market.Currency
-import zio.{RIO, URIO, ZIO, clock, random}
-import zio.clock.Clock
-import zio.random.Random
+import io.circe.Encoder
+import io.circe.Encoder.encodeNone
 
-import scala.collection.immutable.SortedMap
-
-case class CroPrivateRequest[Params <: Jsonable](id: Long, method: String, nonce: Long, params: Option[Params]) {
-  lazy val paramsMap       = params.fold(Map.empty[String, String])(_.toJsonMapSorted.toMap)
-  lazy val croParamsString = params.fold("")(_.toCroParamsString)
+case class CroPrivateRequest[Params: Encoder](id: Long, method: String, nonce: Long, params: Option[Params]) {
+  lazy val paramsMap       = params.fold(Map.empty[String, String])(convertToJsonMapSorted)
+  lazy val croParamsString = params.fold("")(toCroParamsString)
 }
 
 object CroPrivateRequest {
-  def createBuyRequest(
-    pair: Instrument,
-    amountToSpend: Double
-  ): URIO[Clock with Random, CroPrivateRequest[CreateOrderRequestParams]] =
+  def createBuyRequest(pair: Instrument, amountToSpend: Double): IO[CroPrivateRequest[CreateOrderRequestParams]] =
     for {
-      id    <- random.nextInt.map(_.abs)
-      nonce <- clock.instant.map(_.toEpochMilli)
+      id    <- Random.scalaUtilRandom[IO].map(_.betweenLong(0, Long.MaxValue)).flatten
+      nonce <- Clock[IO].realTime.map(_.toMillis)
     } yield CroPrivateRequest(
       id = id,
       method = "private/create-order",
@@ -35,13 +30,10 @@ object CroPrivateRequest {
       ).some
     )
 
-  def createSellRequest(
-    pair: Instrument,
-    amountToSell: Double
-  ): URIO[Clock with Random, CroPrivateRequest[CreateOrderRequestParams]] =
+  def createSellRequest(pair: Instrument, amountToSell: Double): IO[CroPrivateRequest[CreateOrderRequestParams]] =
     for {
-      id    <- random.nextInt.map(_.abs)
-      nonce <- clock.instant.map(_.toEpochMilli)
+      id    <- Random.scalaUtilRandom[IO].map(_.betweenLong(0, Long.MaxValue)).flatten
+      nonce <- Clock[IO].realTime.map(_.toMillis)
     } yield CroPrivateRequest(
       id = id,
       method = "private/create-order",
@@ -56,8 +48,8 @@ object CroPrivateRequest {
 
   def createGetOrderDetails(orderId: String) =
     for {
-      id    <- random.nextInt.map(_.abs)
-      nonce <- clock.instant.map(_.toEpochMilli)
+      id    <- Random.scalaUtilRandom[IO].map(_.betweenLong(0, Long.MaxValue)).flatten
+      nonce <- Clock[IO].realTime.map(_.toMillis)
     } yield CroPrivateRequest(
       id = id,
       method = "private/get-order-detail",
@@ -67,7 +59,7 @@ object CroPrivateRequest {
 
   val getAccountSummaryRequest =
     for {
-      id    <- random.nextInt.map(_.abs)
-      nonce <- clock.instant.map(_.toEpochMilli)
-    } yield CroPrivateRequest(id = id, method = "private/get-account-summary", nonce = nonce, params = None)
+      id    <- Random.scalaUtilRandom[IO].map(_.betweenLong(0, Long.MaxValue)).flatten
+      nonce <- Clock[IO].realTime.map(_.toMillis)
+    } yield CroPrivateRequest(id = id, method = "private/get-account-summary", nonce = nonce, params = None)(encodeNone)
 }

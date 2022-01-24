@@ -23,14 +23,18 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
 //      brokenCommons,
       cats,
+      catsEffect,
+      catsTest,
       circe,
       circeGenericExtras,
       commonsCodec,
+      fs2,
+      log4cats,
+      mules,
+      munit,
       prettyPrint,
       reactor,
-      scalaTest % Test,
-      squants,
-      zio,
-      zioLogging
+      scalaMock,
+      squants
     ) ++ macwireAll ++ sttpAll
   )

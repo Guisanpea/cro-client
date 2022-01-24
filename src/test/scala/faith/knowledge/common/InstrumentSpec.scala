@@ -1,20 +1,18 @@
 package faith.knowledge.common
 
 import faith.knowledge.common.Currencies.USDT
-import org.scalatest.TryValues
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import squants.market.{BTC, USD}
+import munit.FunSuite
+import squants.market.BTC
 
-class InstrumentSpec extends AnyWordSpec with Matchers with TryValues {
-  "Instrument from name should return an instrument if valid format is passed" in {
+class InstrumentSpec extends FunSuite with TryValues {
+  test("Instrument from name should return an instrument if valid format is passed") {
     val instrument = Instrument.fromName("BTC_USDT")
-    instrument.success.value.base shouldBe BTC
-    instrument.success.value.quote shouldBe USDT
+    assertEquals(instrument.success.base, BTC)
+    assertEquals(instrument.success.quote, USDT)
   }
 
-  "Instrument from name should return a failure if invalid format is passed" in {
+  test("Instrument from name should return a failure if invalid format is passed") {
     val instrument = Instrument.fromName("BTCUSDT")
-    instrument.failure.exception.isInstanceOf[IllegalArgumentException]
+    assert(instrument.failure.isInstanceOf[IllegalArgumentException])
   }
 }

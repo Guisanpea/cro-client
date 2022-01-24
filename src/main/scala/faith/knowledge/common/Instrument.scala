@@ -8,6 +8,7 @@ import scala.util.{Failure, Success}
 
 case class Instrument(base: Currency, quote: Currency) {
   val instrumentName = s"${base.code}_${quote.code}"
+  val currencies     = Set(base, quote)
   lazy val opposite  = Instrument(base = quote, quote = base)
 
   lazy val symbol = new Symbol(base.code, quote.code)

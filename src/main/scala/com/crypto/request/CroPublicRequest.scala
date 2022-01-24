@@ -1,17 +1,14 @@
 package com.crypto.request
 
-import io.circe.generic.extras.semiauto._
-import io.circe.{Decoder, Encoder}
-import zio.ZIO
-import zio.clock.Clock
-import zio.random.Random
+import cats.effect.std.Random
+import cats.effect.{Clock, IO}
 
 case class CroPublicRequest(id: Long, method: String, nonce: Long)
 
 object CroPublicRequest {
-  val getInstrumentsRequest: ZIO[Clock with Random, Nothing, CroPublicRequest] =
+  val getInstrumentsRequest: IO[CroPublicRequest] =
     for {
-      id    <- ZIO.accessM[Random](_.get.nextInt.map(_.abs))
-      nonce <- ZIO.accessM[Clock](_.get.instant).map(_.toEpochMilli)
+      id    <- Random.scalaUtilRandom[IO].map(_.betweenLong(0, Long.MaxValue)).flatten
+      nonce <- Clock[IO].realTime.map(_.toMillis)
     } yield CroPublicRequest(id, "public/get-instruments", nonce)
 }

@@ -1,20 +1,18 @@
-package com.crypto
+package com.crypto.response
 
 import cats.implicits._
-import com.crypto.response.GetAccountSummaryResult.Balance
-import com.crypto.response.GetInstrumentsResult.InstrumentResult
-import com.crypto.response.GetOrderDetailResult.{OrderInfo, TradeList}
 import com.crypto.response.GetTickerResult.{InstrumentFoundResult, InstrumentNotFoundResult}
 import faith.knowledge.common.Currencies
-import faith.knowledge.common.Currencies.decoder
 import faith.knowledge.common.Instrument.decoder
 import io.circe.Decoder
+import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
 import squants.market.Currency
 
 import scala.util.Success
 
-package object response {
+object Json {
+  implicit val customCirceConfig: Configuration                     = Configuration.default.withSnakeCaseMemberNames
   implicit def responseDecoder[R: Decoder]: Decoder[CroResponse[R]] = deriveConfiguredDecoder
 
   implicit def publicResponseDecoder[R: Decoder]: Decoder[CroPublicResponse[R]] = deriveConfiguredDecoder
