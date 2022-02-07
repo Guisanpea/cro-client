@@ -2,9 +2,10 @@ package com.crypto
 
 import cats.effect.IO
 import com.crypto.response.CroErrorResponse
-import faith.knowledge.common.syntax.ChainingSyntax.scalaUtilChainingOps
-import faith.knowledge.common.{CroError, SttpLogger}
 import io.circe.{Error => SerializationError}
+import scalable.market.broker.cryptocom.CroError
+import scalable.market.common.SttpLogger
+import scalable.market.common.syntax.ChainingSyntax.scalaUtilChainingOps
 import sttp.capabilities.Effect
 import sttp.client3.{Request, ResponseException, SttpBackend}
 

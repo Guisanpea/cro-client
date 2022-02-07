@@ -1,9 +1,9 @@
 package com.crypto
 
 import com.crypto.request.{CroPrivateRequest, CroSignedRequest}
-import faith.knowledge.common.syntax.ChainingSyntax._
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.{HmacAlgorithms, HmacUtils}
+import scalable.market.common.syntax.ChainingSyntax.scalaUtilChainingOps
 
 class SigProvider(apiKey: String, privateKey: String) {
   def signRequest[Params](request: CroPrivateRequest[Params]): CroSignedRequest = {

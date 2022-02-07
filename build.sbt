@@ -30,6 +30,7 @@ lazy val root = (project in file("."))
       commonsCodec,
       fs2,
       log4cats,
+      mockito,
       mules,
       munit,
       prettyPrint,

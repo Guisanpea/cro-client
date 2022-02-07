@@ -1,6 +1,6 @@
 package com.crypto
 
-import faith.knowledge.common.Instrument
+import scalable.market.common.Instrument
 import squants.market.Currency
 
 package object response {

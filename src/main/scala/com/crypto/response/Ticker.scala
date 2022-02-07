@@ -1,6 +1,6 @@
 package com.crypto.response
 
-import faith.knowledge.common.Instrument
+import scalable.market.common.Instrument
 
 case class Ticker(
   instrument: Instrument,

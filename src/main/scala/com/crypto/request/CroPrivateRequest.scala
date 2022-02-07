@@ -4,9 +4,9 @@ import cats.effect.std.Random
 import cats.effect.{Clock, IO}
 import cats.implicits._
 import com.crypto.request.Json._
-import faith.knowledge.common.Instrument
 import io.circe.Encoder
 import io.circe.Encoder.encodeNone
+import scalable.market.common.Instrument
 
 case class CroPrivateRequest[Params: Encoder](id: Long, method: String, nonce: Long, params: Option[Params]) {
   lazy val paramsMap       = params.fold(Map.empty[String, String])(convertToJsonMapSorted)

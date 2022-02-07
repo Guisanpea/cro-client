@@ -2,11 +2,10 @@ package com.crypto.response
 
 import cats.implicits._
 import com.crypto.response.GetTickerResult.{InstrumentFoundResult, InstrumentNotFoundResult}
-import faith.knowledge.common.Currencies
-import faith.knowledge.common.Instrument.decoder
 import io.circe.Decoder
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredDecoder
+import scalable.market.common.Currencies
 import squants.market.Currency
 
 import scala.util.Success

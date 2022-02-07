@@ -9,10 +9,10 @@ import com.crypto.request.{CroPrivateRequest, CroPublicRequest, CroSignedRequest
 import com.crypto.response.Candlestick.getGrowth
 import com.crypto.response.Json._
 import com.crypto.response._
-import faith.knowledge.common.Instrument
 import io.circe.Decoder
 import org.typelevel.log4cats.Logger
-import faith.knowledge.common.syntax.NestedFunctorSyntax._
+import scalable.market.common.Instrument
+import scalable.market.common.syntax.NestedFunctorSyntax.NestedFunctorOps
 import sttp.client3._
 import sttp.client3.circe._
 import sttp.model.Uri
@@ -20,7 +20,7 @@ import sttp.model.Uri
 import java.net.URI
 import scala.concurrent.duration.DurationInt
 
-class CroApi(httpClient: HttpClient, logger: Logger[IO], sigProvider: SigProvider) {
+final class CroApi(httpClient: HttpClient, logger: Logger[IO], sigProvider: SigProvider) extends CryptoComApi {
 
   // When you buy a currency pair from a broker, you buy the base currency and sell the quote currency.
   // for example if you buy instrument BTC_USDT with amountToSpend 10.0 you buy BTC by selling 10 USDT
@@ -37,7 +37,7 @@ class CroApi(httpClient: HttpClient, logger: Logger[IO], sigProvider: SigProvide
 
   // When you sell a currency pair from a broker, you sell the base currency and receive the quote currency.
   // for example if you sell instrument CRO_USDT with amountToSell 10.0 you get USDT by spending 10 CRO
-  def requestSellOrder(instrument: Instrument, amountToSell: Double) = {
+  def requestSellOrder(instrument: Instrument, amountToSell: Double): IO[CroResponse[GetOrderDetailResult]] = {
     for {
       request <-
         CroPrivateRequest.createSellRequest(instrument, amountToSell = amountToSell).map(sigProvider.signRequest)

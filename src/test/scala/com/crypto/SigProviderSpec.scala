@@ -2,12 +2,13 @@ package com.crypto
 
 import cats.implicits.catsSyntaxOptionId
 import com.crypto.SigProviderSpec._
+import com.crypto.SigProvider
 import com.crypto.request.Json._
 import com.crypto.request.{CreateOrderRequestParams, CroPrivateRequest}
-import faith.knowledge.common.syntax.ChainingSyntax._
 import munit.FunSuite
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.{HmacAlgorithms, HmacUtils}
+import scalable.market.common.syntax.ChainingSyntax.scalaUtilChainingOps
 
 class SigProviderSpec extends FunSuite {
   test("A sig provider with a given key and pass should encode properly a given request") {

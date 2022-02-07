@@ -22,6 +22,8 @@ object Dependencies {
     "com.softwaremill.macwire" %% "proxy"  % macwireVersion
   )
 
+  lazy val mockito = "org.mockito" %% "mockito-scala" % "1.17.0"
+
   lazy val munit    = "org.scalameta"      %% "munit"     % "0.7.29" % Test
   lazy val mules    = "io.chrisdavenport"  %% "mules"     % "0.5.0"
   lazy val munitZio = "com.github.poslegm" %% "munit-zio" % "0.0.3"  % Test
